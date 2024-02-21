@@ -1,0 +1,91 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+$alertSystem-primary: mat.define-palette(mat.$indigo-palette);
+$alertSystem-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$alertSystem-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$alertSystem-theme: mat.define-light-theme((
+  color: (
+    primary: $alertSystem-primary,
+    accent: $alertSystem-accent,
+    warn: $alertSystem-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($alertSystem-theme);
+
+html,
+body {
+  height: 100%;
+}
+
+$spaceamounts: (0, 2, 3, 5, 10, 15, 16, 20, 25, 30, 45, 50, 100); // Adjust this to include the pixel amounts you need.
+$sides: (top, bottom, left, right); // Leave this variable alone
+
+@each $space in $spaceamounts {
+  @each $side in $sides {
+    .m#{str-slice($side, 0, 1)}-#{$space} {
+      margin-#{$side}: #{$space}px !important;
+    }
+
+    .p#{str-slice($side, 0, 1)}-#{$space} {
+      padding-#{$side}: #{$space}px !important;
+    }
+  }
+}
+
+@each $space in $spaceamounts {
+  .m-#{$space} {
+    margin: #{$space}px;
+  }
+
+  .p-#{$space} {
+    padding: #{$space}px;
+  }
+}
+
+$fontSizes: (10, 12, 14, 15, 16, 18, 20, 22, 24, 25, 40, 50 , 80); // Adjust this to include the pixel amounts you need.
+
+@each $size in $fontSizes {
+  .fz-#{$size} {
+    font-size: #{$size}px !important;
+  }
+}
+
+$wh: (20, 30, 50, 70, 80, 90, 100, 120, 130, 150, 200, 250, 300, 400, 450, 600, 700); // Adjust this to include the pixel amounts you need.
+
+@each $size in $wh {
+  .w-#{$size}px {
+    width: #{$size}px !important;
+  }
+
+  .h-#{$size}px {
+    height: #{$size}px !important;
+  }
+}
+.w-100{
+  width: 100%;
+}
+.oauto{
+ overflow: auto;
+}
+.mat-drawer-content{
+  overflow: hidden !important;
+}

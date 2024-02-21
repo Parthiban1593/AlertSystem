@@ -1,0 +1,26 @@
+<div fxLayout="column" fxFlexFill>
+    <google-map #map height="400px"
+            width="750px"
+            [center]="center"
+            [zoom]="zoom"
+            (mapMousemove)="move($event)">
+            <map-marker *ngFor="let marker of markersArr;" [position]="marker.markerPosition" [icon]="marker.icon" />
+    </google-map>
+</div>
+<ng-template #motionCaptureDialog>
+    <div fxFlexFill fxLayout="column">
+      <div class="p-20 pb-5">
+        <h1 mat-dialog-title class="mb-5">Motion Captured</h1>
+      </div>
+      <mat-dialog-content fxLayout="column" class="oauto" fxFlex>
+        <video autoplay controls>
+            <source src="assets/video/motion-detection.mp4" type="video/mp4">
+        </video>
+      </mat-dialog-content>
+      <mat-dialog-actions fxLayout="row" fxLayoutAlign="end end" class="mb-10">
+        <div class="mr-20">
+          <button type="button"  mat-dialog-close mat-button >close</button>
+        </div>
+      </mat-dialog-actions>
+    </div>
+</ng-template>
