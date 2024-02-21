@@ -1,6 +1,9 @@
 import { Component ,TemplateRef,ViewChild} from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { AlertDetails } from 'src/app/models/alert-details.model';
+import { DataService } from 'src/app/services/data.service';
 import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
@@ -11,6 +14,8 @@ import { SocketService } from 'src/app/services/socket.service';
 export class LocationComponent {
 
   @ViewChild('motionCaptureDialog') motionCaptureDialog: TemplateRef<any> = {} as TemplateRef<any>;
+  @ViewChild('alertDetialsDialog') alertDetialsDialog: TemplateRef<any> = {} as TemplateRef<any>;
+  
   @ViewChild('map') map: google.maps.Map | undefined;
   center: google.maps.LatLngLiteral = { lat: 24, lng: 12 };
   zoom = 4;
@@ -34,6 +39,7 @@ export class LocationComponent {
   markersArr : any[] = [
     {
       id: 1,
+      action : "battery",
       markerPosition : {
         lat: 27.638471699392344, lng: 2.5957031249999973,
       },
@@ -41,6 +47,7 @@ export class LocationComponent {
     },
     {
       id:2,
+      action : "camera",
       markerPosition : {
         lat: 27.32658305694333, lng: 16.833984374999996,
       },
@@ -48,13 +55,17 @@ export class LocationComponent {
     },
     {
       id:3,
+      action : "door",
       markerPosition : {
         lat: 14.980549930938247, lng: 18.328124999999996,
       },
       icon: 'assets/icons/door-close.svg'
     }
   ];
-  constructor(private webSocketService: SocketService,private dialog: MatDialog) {}
+
+  dataSource: MatTableDataSource<AlertDetails> = {} as MatTableDataSource<AlertDetails>;
+  displayColumns : string[] = ["Location","Time","Description"]
+  constructor(private webSocketService: SocketService,private dialog: MatDialog,private dataService : DataService) {}
   moveMap(event: google.maps.MapMouseEvent) {
     this.center = (event.latLng!.toJSON());
   }
@@ -70,6 +81,8 @@ export class LocationComponent {
 
     this.webSocketService.getMotionDetectionAlert().subscribe((res: any)=>{
      this.dialog.open(this.motionCaptureDialog, {
+        width : "50%",
+        height : "50%",
         disableClose: true,
         autoFocus: false
       });
@@ -91,6 +104,19 @@ export class LocationComponent {
       }else {
         this.markersArr[markerIndx].icon = "assets/icons/door-close.svg";
       }
+    })
+  }
+
+  getAlertDetails(marker : any){
+    this.dataService.getOpertationData(marker.action).subscribe((res : AlertDetails[])=>{
+      this.dialog.open(this.alertDetialsDialog, {
+        width : "60%",
+        height : "60%",
+        disableClose: true,
+        autoFocus: false
+      });
+      this.dataSource = new MatTableDataSource(res);
+       console.log(res)
     })
   }
 }

@@ -4,7 +4,7 @@
             [center]="center"
             [zoom]="zoom"
             (mapMousemove)="move($event)">
-            <map-marker *ngFor="let marker of markersArr;" [position]="marker.markerPosition" [icon]="marker.icon" />
+            <map-marker [clickable]="true" (mapClick)="getAlertDetails(marker)" *ngFor="let marker of markersArr;" [position]="marker.markerPosition" [icon]="marker.icon" />
     </google-map>
 </div>
 <ng-template #motionCaptureDialog>
@@ -23,4 +23,49 @@
         </div>
       </mat-dialog-actions>
     </div>
+</ng-template>
+
+<ng-template #alertDetialsDialog>
+  <div fxFlexFill fxLayout="column">
+    <div class="p-20 pb-5">
+      <h1 mat-dialog-title class="mb-5">Alert Details</h1>
+    </div>
+
+    <mat-dialog-content fxLayout="column" class="oauto" fxFlex>
+      <div *ngIf="dataSource?.data!.length>0">
+        <table class="w-100" mat-table [dataSource]="dataSource">
+
+          <ng-container matColumnDef="Location" sticky>
+            <th mat-header-cell *matHeaderCellDef class="bold fz-16">
+             Location
+            </th>
+            <td mat-cell *matCellDef="let element" class="fz-16 mw-100px">{{element.location}}</td>
+          </ng-container>
+
+          <ng-container  matColumnDef="Time">
+            <th mat-header-cell *matHeaderCellDef class="bold fz-16">
+             Time
+            </th>
+            <td mat-cell *matCellDef="let element" class="fz-16 mw-100px">{{element.time}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="Description" sticky>
+            <th mat-header-cell *matHeaderCellDef class="bold fz-16">
+              Description
+            </th>
+            <td mat-cell *matCellDef="let element" class="fz-16 mw-100px">{{element.description}}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayColumns;sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayColumns;"></tr>
+        </table>
+      </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end end" class="mb-10">
+      <div class="mr-20">
+        <button type="button" mat-dialog-close mat-button>Close</button>
+      </div>
+    </mat-dialog-actions>
+  </div>
 </ng-template>
