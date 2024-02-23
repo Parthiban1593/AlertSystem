@@ -15,4 +15,11 @@ export class DataService {
     getOpertationData(action : string) : any{
        return this.hc.get(`${this.baseUrl}${constantvalues.API_URL.GET_ALERT_DETAILS}?action=${action}`);
     }
+
+    saveScreenShot(imgData : string){
+         let param = {
+            "imgData" : imgData
+         }
+        return this.hc.post(`${this.baseUrl}${constantvalues.API_URL.SAVE_LOCATION}`,param);
+    }
 }

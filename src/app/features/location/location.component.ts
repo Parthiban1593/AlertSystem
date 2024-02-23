@@ -2,6 +2,7 @@ import { Component ,TemplateRef,ViewChild} from '@angular/core';
 import { GoogleMap } from '@angular/google-maps';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import html2canvas from 'html2canvas';
 import { AlertDetails } from 'src/app/models/alert-details.model';
 import { DataService } from 'src/app/services/data.service';
 import { SocketService } from 'src/app/services/socket.service';
@@ -118,5 +119,27 @@ export class LocationComponent {
       this.dataSource = new MatTableDataSource(res);
        console.log(res)
     })
+  }
+
+  captureScreenshot() {
+    html2canvas(document.body,{
+      useCORS: true,
+      allowTaint: false}).then(canvas => {
+        var tempcanvas=document.createElement('canvas');
+        tempcanvas.width=1350;
+        tempcanvas.height=700;
+        var context : any=tempcanvas.getContext('2d');
+        context.drawImage(canvas,0,0,1350,700,0,0,1350,700);
+        var link=document.createElement("a");
+        this.sendScreenshot(tempcanvas.toDataURL('image/jpg'));
+    });
+  }
+
+  sendScreenshot(imageData: string) {
+    // Send imageData to the WebSocket server
+    // WebSocket implementation goes here
+    this.dataService.saveScreenShot(imageData).subscribe((res : any)=>{
+
+    });
   }
 }
